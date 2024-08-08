@@ -1,0 +1,41 @@
+@startuml
+actor Admin
+actor User
+actor Student
+
+rectangle Blog {
+    Admin --> (Manage Posts)
+    Admin --> (Manage Categories)
+    Admin --> (Manage Tags)
+    Admin --> (Manage Projects)
+    Admin --> (Archive Posts)
+    Admin --> (Ban Users)
+    Admin --> (Interact on Posts)
+    Admin --> (Receive User Requests)
+    
+    User --> (Create Interaction)
+    User --> (Comment on Posts)
+    User --> (Archive Own Posts)
+    User --> (Create, Edit, Delete Comments)
+    User --> (Delete Own Comments)
+    User --> (Interact on Any Post)
+    User --> (Browse Categories)
+    User --> (Search by Tags or Content)
+    User --> (Filter Posts by Category)
+    User --> (Request Admin to Become a Student)
+
+    Student --> (Publish Projects)
+    Student --> (View Other Students' Projects)
+    Student --> (Edit, Delete Own Projects)
+    Student --> (Create Interaction)
+    Student --> (Comment on Posts)
+    Student --> (Archive Own Posts)
+    Student --> (Create, Edit, Delete Comments)
+    Student --> (Delete Own Comments)
+    Student --> (Interact on Any Post)
+    Student --> (Browse Categories)
+    Student --> (Search by Tags or Content)
+    Student --> (Filter Posts by Category)
+    Student --> (Request Admin to Become a Student)
+}
+@enduml
