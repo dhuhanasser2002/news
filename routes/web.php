@@ -65,7 +65,7 @@ Route::middleware(['guest'])->group(function () {
     Route::get('login', [UserController::class, 'showLoginForm'])->name('login');
     Route::post('login', [UserController::class, 'login']);
     
-    Route::get('dailay', [DailayController::class, 'index'])->name('daily.index');
+   
     Route::middleware(['can:view,post'])->get('Article/{article}', [ArticleController::class, 'show'])->name('articles.show');
     Route::middleware(['can:create,App\Models\Article'])->get('article/create', [ArticleController::class, 'create'])->name('articles.create');
     Route::middleware(['can:create,App\Models\Article'])->post('articles', [ArticleController::class, 'store'])->name('articles.store');
@@ -95,4 +95,5 @@ Route::middleware(['guest'])->group(function () {
     Route::middleware(['can:update,dailay'])->get('dailays/{dailay}/edit', [DailayController::class, 'edit'])->name('daily.edit');
     Route::middleware(['can:update,dailay'])->put('dailays/{dailay}', [DailayController::class, 'update'])->name('daily.update');
     Route::middleware(['can:delete,dailay'])->delete('dailays/{dailay}', [DailayController::class, 'destroy'])->name('daily.destroy');
+    Route::get('dailay', [DailayController::class, 'index'])->name('daily.index');
     Route::get('search',[ArticleController::class , 'searcharticle'])->name('articles.search');

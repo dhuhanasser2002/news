@@ -16,7 +16,7 @@ class ArticleController extends Controller
     public function index()
     {
         $dailys = Dailay::paginate(20);
-        $articles = Article::all();
+        $articles = Article::orderBy('created_at', 'desc')->get();
         $sports = Article::whereHas('category', function ($query) {$query->where('name', 'رياضة');})->get();
         $arts = Article::whereHas('category', function ($query) {$query->where('name', 'فن');})->get();
         $webs = Article::whereHas('category', function ($query) {$query->where('name', 'ويب');})->get();
@@ -118,34 +118,53 @@ class ArticleController extends Controller
     {
         $request->validate([
             'title'=>'required|string',
-            'content' => 'text',
+            'content' => 'string',
             'feture_img'=>'image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
-
+    
         $article->title = $request->input('title');
         $article->content = $request->input('content');
         $article->category_id = $request->input('category_id');
         $article->user_id = auth()->user()->id;
-        $article->created_at;
-        if($request->hasFile('feture_img')){
+    
+        // Handling feature image
+        if ($request->hasFile('feture_img')) {
+            // Delete old feature image
+            if ($article->feture_img && file_exists(public_path('images') . '/' . $article->feture_img)) {
+                unlink(public_path('images') . '/' . $article->feture_img);
+            }
+            // Save new feature image
             $feture_img = $request->file('feture_img');
-            $feture_imgname = time().".".$feture_img->getClientOriginalExtension();
+            $feture_imgname = time() . "." . $feture_img->getClientOriginalExtension();
             $feture_img->move(public_path('images'), $feture_imgname);
             $article->feture_img = $feture_imgname;
         }
+    
         $article->save();
-        if($request->hasFile('images')){
+    
+        // Handling gallery images
+        if ($request->hasFile('images')) {
+            // Delete old images from database and storage
+            foreach ($article->images as $image) {
+                if (file_exists(public_path('images') . '/' . $image->image)) {
+                    unlink(public_path('images') . '/' . $image->image);
+                }
+                $image->delete();
+            }
+    
+            // Save new images
             foreach ($request->file('images') as $image) {
                 $image_name = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('images'), $image_name);
-
-                Image::update([
+    
+                Image::create([
                     'article_id' => $article->id,
                     'image' => $image_name,
                 ]);
             }
         }
-        return redirect()->route('atricles.index')->with('article updated successfuly');
+    
+        return redirect()->route('articles.index')->with('success', 'Article updated successfully');
     }
 
     /**
@@ -158,17 +177,5 @@ class ArticleController extends Controller
         return redirect()->route('articles.index')->with('article deleted successfuly');
     }
 
-    public function search(Request $request)
-    {
-        $request->validate([
-            'query' => 'required'
-        ]);
-        $query = $request->input('query');
-
-        $articles = Article::where('title', 'like', '%'.$query.'%')
-                    ->orWhere('content', 'like', '%'.$query.'%')
-                    ->get();
-
-            return view('article.index', compact('articles'));
-    }
 }
+ 

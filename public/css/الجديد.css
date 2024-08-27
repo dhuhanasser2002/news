@@ -79,7 +79,7 @@ body {
 /* end-component *
 /* landing */
 .landing{
-    min-height: 100vh;
+    min-height: 90vh;
     background-color: #1f2021;
     background-image: url("../images/landing.jpg.lnk");
     background-size: cover;
@@ -274,10 +274,55 @@ body {
     }
 }
 
+.articlecontainer {
+    max-width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #f4f4f4;
+}
 
+.articlecontainer h1 {
+    font-size: 2em;
+    margin-bottom: 10px;
+    color: #333;
+}
 
+.articlecontainer .content {
+    position: relative;
+    overflow: hidden;
+    max-height: 100px;
+    transition: max-height 0.2s ease-out;
+}
 
+.articlecontainer .content.expanded {
+    max-height: 1000px;
+}
 
+.articlecontainer .content::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: linear-gradient(to top, white, transparent);
+}
 
+.articlecontainer .show-more {
+    display: block;
+    text-align: center;
+    margin: 10px 0;
+    cursor: pointer;
+    color: #007bff;
+    font-weight: bold;
+}
 
+.articlecontainer .image {
+    max-width: 40%;
+    
+    border-radius: 8px;
+}
 
